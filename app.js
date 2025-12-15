@@ -5,6 +5,8 @@ import adminRoutes from "./routes/admin.js";
 import homeRoutes from "./routes/home.js";
 import shopRoutes from "./routes/shop.js";
 
+import { get404 } from './controllers/error.js'
+
 const app = express();
 
 app.set("view engine", "ejs");
@@ -17,10 +19,6 @@ app.use(homeRoutes);
 app.use(adminRoutes);
 app.use(shopRoutes);
 
-app.use((req, res, next) => {
-  res
-    .status(404)
-    .render("404", { pageTitle: "Page Not Found", theme: "light" });
-});
+app.use(get404);
 
-app.listen(5000);
+app.listen(3000);

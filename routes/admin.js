@@ -1,23 +1,23 @@
 import express from "express";
+import {
+  getAdmin,
+  getAdminAddProduct,
+  postAdminAddProduct,
+  getAdminEditProduct,
+  postAdminEditProduct,
+  postAdminDeleteProduct,
+} from "../controllers/admin.js";
 
 const router = express.Router();
-const products = [];
 
-router.get("/admin", (req, res) => {
-  res.render("admin/index", {
-    hasProducts: !!products?.length > 0,
-    products,
-    theme: "dark",
-  });
-});
+router.get("/admin", getAdmin);
 
-router.get("/admin/add-product", (req, res) => {
-  res.render("admin/add-product", { theme: "dark" });
-});
+router.get("/admin/add-product", getAdminAddProduct);
+router.post("/admin/add-product", postAdminAddProduct);
 
-router.post("/admin/add-product", (req, res) => {
-  products.push({ title: req.body.title });
-  res.redirect("/admin");
-});
+router.get("/admin/edit-product", getAdminEditProduct);
+router.post("/admin/edit-product", postAdminEditProduct);
+
+router.post("/admin/delete-product", postAdminDeleteProduct);
 
 export default router;
