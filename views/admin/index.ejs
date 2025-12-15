@@ -1,0 +1,25 @@
+<html lang="en">
+  <%- include('../partials/head', { pageTitle: 'Admin Page' }) %>
+
+  <body data-bs-theme="<%= theme %>">
+    <%- include('../partials/navigation') %>
+
+    <main>
+      <h1>Admin Panel</h1>
+      <% if (products && products.length > 0) { %>
+
+      <h3>Product List</h3>
+      <ul>
+        <% for (let product of products) { %>
+        <li><%= product.title %></li>
+        <% } %>
+      </ul>
+
+      <% } %> <% if (!products || products.length === 0) { %>
+      <p>No products available.</p>
+      <% } %>
+
+      <a href="/admin/add-product">Add Product</a>
+    </main>
+  </body>
+</html>
