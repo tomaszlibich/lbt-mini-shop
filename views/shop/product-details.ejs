@@ -7,6 +7,14 @@
     <main>
       <h1>Product Details Page</h1>
       <p>Here are details of a single product.</p>
+      <p>
+        <%= product.title %>, <%= product.price %>, <%= product.description %>
+      </p>
+      <%- include('../partials/add-to-cart', { product }) %>
+      <a class="btn btn-secondary" href="/products"
+            >Go Back To List</a
+          >
+        </li>
     </main>
   </body>
 </html>

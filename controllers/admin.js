@@ -10,8 +10,16 @@ export const getAdmin = (req, res) => {
   });
 };
 
-export const getAdminAddProduct = (req, res) => {
-  res.render("admin/add-product", { theme: "dark" });
+export const getAdminAddEditProduct = (req, res) => {
+  const productId = req.params.productId;
+
+  if (productId) {
+    Product.findById(productId, (product) => {
+      res.render("admin/add-edit-product", { product, theme: "dark" });
+    });
+  } else {
+    res.render("admin/add-edit-product", { product: null, theme: "dark" });
+  }
 };
 
 export const postAdminAddProduct = (req, res) => {
@@ -19,39 +27,34 @@ export const postAdminAddProduct = (req, res) => {
 
   const product = new Product(title, imageUrl, price, description);
 
-  product.save();
+  product.add();
 
   res.redirect("/admin");
-};
-
-export const getAdminEditProduct = (req, res) => {
-  res.render("admin/edit-product", { theme: "dark" });
 };
 
 export const postAdminEditProduct = (req, res) => {
-  Product.fetchAll((products) => {
-    res.render("admin/index", {
-      hasProducts: !!products?.length > 0,
-      products,
-      theme: "dark",
-    });
-  });
+  const productId = req.params.productId;
+  const { title, imageUrl, price, description } = req.body;
 
-  //find and amend
+  const product = new Product(title, imageUrl, price, description);
 
-  const product = new Product(req.body.title);
-
-  res.redirect("/admin");
+  product.update(
+    productId,
+    { title, imageUrl, price: parseFloat(price, 10), description },
+    (newProducts) => {
+      res.render("admin/index", {
+        hasProducts: !!newProducts?.length > 0,
+        products: newProducts,
+        theme: "dark",
+      });
+    }
+  );
 };
 
 export const postAdminDeleteProduct = (req, res) => {
-  Product.fetchAll((products) => {
-    //find and delete
+  const productId = req.params.productId;
 
-    res.render("admin/index", {
-      hasProducts: !!products?.length > 0,
-      products,
-      theme: "dark",
-    });
+  Product.delete(productId, (newProducts) => {
+    res.redirect("/admin");
   });
 };

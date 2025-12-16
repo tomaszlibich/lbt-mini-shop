@@ -14,9 +14,10 @@
         <% for (let product of products) { %>
         <li class="d-flex">
           <%= product.title %>, <%= product.price %>, <%= product.description %>
-          <form action="/add-to-cart" type="POST">
-            <button class="btn btn-primary" type="submit">Add to cart</button>
-          </form>
+          <%- include('../partials/add-to-cart', { product }) %>
+          <a class="btn btn-secondary" href="/products/<%= product.id %>"
+            >Details</a
+          >
         </li>
         <% } %>
       </ul>

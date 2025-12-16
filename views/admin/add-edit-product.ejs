@@ -5,20 +5,36 @@
     <%- include('../partials/navigation') %>
 
     <main>
-      <h2>Edit Product</h2>
-      <form action="/admin/edit-product" method="POST">
+      <h2><%= product ? "Edit Product" : "Add Product" %></h2>
+      <form
+        action="<%= product ? `/admin/edit-product/${product.id}` : '/admin/add-product' %>"
+        method="POST"
+      >
         <fieldset class="m-3">
           <label class="form-label" for="title">Title</label>
-          <input class="form-control" type="text" name="title" id="title" />
+          <input
+            class="form-control"
+            type="text"
+            name="title"
+            id="title"
+            value="<%= product ? product.title : '' %>"
+          />
           <label class="form-label" for="imageUrl">Image URL</label>
           <input
             class="form-control"
             type="text"
             name="imageUrl"
             id="imageUrl"
+            value="<%= product ? product.imageUrl : '' %>"
           />
           <label class="form-label" for="price">Price</label>
-          <input class="form-control" type="number" name="price" id="price" />
+          <input
+            class="form-control"
+            type="number"
+            name="price"
+            id="price"
+            value="<%= product ? product.price : '' %>"
+          />
         </fieldset>
         <fieldset class="m-3">
           <label class="form-label" for="description">Description</label>
@@ -27,10 +43,14 @@
             name="description"
             id="description"
             rows="5"
-          ></textarea>
+          >
+<%= product ? product.description : '' %></textarea
+          >
         </fieldset>
         <div class="m-3">
-          <button class="btn btn-primary" type="submit">Add Product</button>
+          <button class="btn btn-primary" type="submit">
+            <%= product ? "Save Product" : "Add Product" %>
+          </button>
         </div>
       </form>
     </main>

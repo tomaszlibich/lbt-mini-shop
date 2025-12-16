@@ -7,7 +7,39 @@
     <main>
       <h1>Cart Page</h1>
       <p>This is cart content.</p>
-      <a href="/checkout">Go to Checkout</a>
+
+      <% if (cartProducts && cartProducts.length > 0) { %>
+      <h3>Products in Cart</h3>
+      <ul>
+        <% for (let product of cartProducts) { %>
+        <li>
+          <%= product.id %> - <%= product.title %>, <%= product.description %>,
+          <%= product.price %> - Quantity: <%= product.quantity %>
+          <form action="/remove-from-cart" method="POST">
+            <button class="btn btn-primary" type="submit">
+              Remove from cart
+            </button>
+            <input type="hidden" name="productId" value="<%= product.id %>" />
+          </form>
+          <form action="/change-quantity" method="POST">
+            <button class="btn btn-secondary" type="submit">+</button>
+            <input type="hidden" name="productId" value="<%= product.id %>" />
+            <input type="hidden" name="action" value="increase" />
+          </form>
+          <form action="/change-quantity" method="POST">
+            <button class="btn btn-secondary" type="submit">-</button>
+            <input type="hidden" name="productId" value="<%= product.id %>" />
+            <input type="hidden" name="action" value="decrease" />
+          </form>
+        </li>
+        <% } %>
+      </ul>
+      <% } else { %>
+      <p>Your cart is empty.</p>
+      <% } %>
+      <div>Total Price: <%= cart.totalPrice %></div>
+      <a class="btn btn-secondary" href="/products">Go back to Product List</a>
+      <a class="btn btn-primary" href="/checkout">Go to Checkout</a>
     </main>
   </body>
 </html>
