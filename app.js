@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import express from "express";
 import bodyParser from "body-parser";
 
@@ -5,7 +7,7 @@ import adminRoutes from "./routes/admin.js";
 import homeRoutes from "./routes/home.js";
 import shopRoutes from "./routes/shop.js";
 
-import { get404 } from './controllers/error.js'
+import { get404 } from "./controllers/error.js";
 
 const app = express();
 

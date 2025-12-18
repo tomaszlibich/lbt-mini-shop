@@ -1,19 +1,9 @@
-import fs from "fs";
-import path from "path";
-import { rootPath } from "../utils/path.js";
+import db from "../utils/database.js";
 
-const p = path.join(rootPath, "data", "products.json");
+const getAllProducts = async () => {
+  const result = await db.execute("SELECT * FROM products");
 
-const getAllProducts = (callback) => {
-  fs.readFile(p, (error, fileContent) => {
-    if (error) {
-      callback([]);
-
-      return;
-    }
-
-    callback(JSON.parse(fileContent));
-  });
+  return result[0];
 };
 
 export class Product {
@@ -24,63 +14,41 @@ export class Product {
     this.description = description;
   }
 
-  add() {
-    this.id = Math.random().toString();
-
-    getAllProducts((products) => {
-      products.push(this);
-
-      fs.writeFile(p, JSON.stringify(products), (error) => {
-        if (error) {
-          console.error("Error: ", error);
-        }
-      });
-    });
+  async add() {
+    await db.execute(
+      "INSERT INTO products (title, imageUrl, price, description) VALUES (?, ?, ?, ?)",
+      [this.title, this.imageUrl, this.price, this.description]
+    );
   }
 
-  update(productId, updatedProductData, callback) {
-    getAllProducts((products) => {
-      const productIndex = products.findIndex((p) => p.id === productId);
+  async update(productId, updatedProductData) {
+    await db.execute(
+      "UPDATE products SET title = ?, imageUrl = ?, price = ?, description = ? WHERE id = ?",
+      [
+        updatedProductData.title,
+        updatedProductData.imageUrl,
+        parseFloat(updatedProductData.price, 10),
+        updatedProductData.description,
+        productId,
+      ]
+    );
 
-      if (productIndex !== -1) {
-        products[productIndex] = {
-          ...products[productIndex],
-          ...updatedProductData,
-        };
-      }
-
-      fs.writeFile(p, JSON.stringify(products), (error) => {
-        if (error) {
-          console.error("Error: ", error);
-        }
-      });
-
-      callback(products);
-    });
+    return await getAllProducts();
   }
 
-  static delete(productId, callback) {
-    getAllProducts((products) => {
-      const newProducts = products.filter((p) => p.id !== productId);
-
-      fs.writeFile(p, JSON.stringify(newProducts), (error) => {
-        if (error) {
-          console.error("Error: ", error);
-        }
-        callback(newProducts);
-      });
-    });
+  static async delete(productId) {
+    await db.execute("DELETE FROM products WHERE id = ?", [productId]);
   }
 
-  static fetchAll(callback) {
-    getAllProducts(callback);
+  static async fetchAll() {
+    return await getAllProducts();
   }
 
-  static findById(id, callback) {
-    getAllProducts((products) => {
-      const product = products.find((p) => p.id === id);
+  static async findById(id) {
+    const result = await db.execute("SELECT * FROM products WHERE id = ?", [
+      id,
+    ]);
 
-      callback(product);
-    });
+    return result[0][0];
   }
 }

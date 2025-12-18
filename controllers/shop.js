@@ -5,34 +5,37 @@ export const getShopIndex = (req, res) => {
   res.render("shop/index", { theme: "light" });
 };
 
-export const getProductDetails = (req, res) => {
+export const getProductDetails = async (req, res) => {
   const productId = req.params.productId;
 
-  Product.findById(productId, (product) => {
-    res.render("shop/product-details", { product, theme: "light" });
-  });
+  const product = await Product.findById(productId);
+
+  console.log("Product Details: ", product);
+
+  res.render("shop/product-details", { product, theme: "light" });
 };
 
-export const getProductsList = (req, res) => {
-  Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      hasProducts: !!products?.length > 0,
-      products,
-      theme: "light",
-    });
+export const getProductsList = async (req, res) => {
+  const products = await Product.fetchAll();
+
+  res.render("shop/product-list", {
+    hasProducts: !!products?.length > 0,
+    products,
+    theme: "light",
   });
 };
 
 export const getCart = (req, res) => {
-  Cart.readCart((cart) => {
-    Product.fetchAll((products) => {
-      const cartProducts = cart.products.map((prod) => {
-        const productData = products.find((p) => p.id === prod.id);
-        return { ...prod, ...productData };
-      });
+  Cart.readCart(async (cart) => {
+    const products = await Product.fetchAll();
 
-      res.render("shop/cart", { cart, cartProducts, theme: "light" });
+    const cartProducts = cart.products.map((prod) => {
+      const productData = products.find((p) => p.id === prod.id);
+
+      return { ...prod, ...productData };
     });
+
+    res.render("shop/cart", { cart, cartProducts, theme: "light" });
   });
 };
 
@@ -40,33 +43,33 @@ export const getOrders = (req, res) => {
   res.render("shop/orders", { theme: "light" });
 };
 
-export const postAddToCart = (req, res) => {
+export const postAddToCart = async (req, res) => {
   const productId = req.body.productId;
 
-  Product.findById(productId, (product) => {
-    Cart.addProduct(productId, product, () => {
-      res.redirect("/cart");
-    });
+  const product = await Product.findById(productId);
+
+  Cart.addProduct(productId, product, () => {
+    res.redirect("/cart");
   });
 };
 
-export const postRemoveFromCart = (req, res) => {
+export const postRemoveFromCart = async (req, res) => {
   const productId = req.body.productId;
-  Product.findById(productId, (product) => {
-    Cart.removeProduct(productId, product.price, () => {
-      res.redirect("/cart");
-    });
+  const product = await Product.findById(productId);
+
+  Cart.removeProduct(productId, product.price, () => {
+    res.redirect("/cart");
   });
 };
 
-export const postChangeQuantity = (req, res) => {
+export const postChangeQuantity = async (req, res) => {
   const productId = req.body.productId;
   const action = req.body.action;
 
-  Product.findById(productId, (product) => {
-    Cart.changeQuantity(productId, product.price, action, () => {
-      res.redirect("/cart");
-    });
+  const product = await Product.findById(productId);
+
+  Cart.changeQuantity(productId, product.price, action, () => {
+    res.redirect("/cart");
   });
 };
 
