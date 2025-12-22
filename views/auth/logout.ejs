@@ -1,0 +1,15 @@
+<html lang="en">
+  <%- include('../partials/head', { pageTitle: 'Logout Page' }) %>
+
+  <body data-bs-theme="<%= theme %>">
+    <%- include('../partials/navigation', { isAuthenticated }) %>
+
+    <main>
+      <h1>Logout Page</h1>      
+        <% if (message) { %>
+        <p style="color: green"><%= message %></p>
+        <% } %>        
+      </form>
+    </main>
+  </body>
+</html>

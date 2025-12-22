@@ -2,7 +2,7 @@ import { Cart } from "../models/cart.js";
 import { Product } from "../models/product.js";
 
 export const getShopIndex = (req, res) => {
-  res.render("shop/index", { theme: "light" });
+  res.render("shop/index", { isAuthenticated: req.isLoggedIn, theme: "light" });
 };
 
 export const getProductDetails = async (req, res) => {
@@ -10,9 +10,11 @@ export const getProductDetails = async (req, res) => {
 
   const product = await Product.findById(productId);
 
-  console.log("Product Details: ", product);
-
-  res.render("shop/product-details", { product, theme: "light" });
+  res.render("shop/product-details", {
+    isAuthenticated: req.session.isLoggedIn,
+    product,
+    theme: "light",
+  });
 };
 
 export const getProductsList = async (req, res) => {
@@ -20,6 +22,7 @@ export const getProductsList = async (req, res) => {
 
   res.render("shop/product-list", {
     hasProducts: !!products?.length > 0,
+    isAuthenticated: req.session.isLoggedIn,
     products,
     theme: "light",
   });
@@ -35,16 +38,26 @@ export const getCart = (req, res) => {
       return { ...prod, ...productData };
     });
 
-    res.render("shop/cart", { cart, cartProducts, theme: "light" });
+    res.render("shop/cart", {
+      cart,
+      cartProducts,
+      isAuthenticated: req.session.isLoggedIn,
+      theme: "light",
+    });
   });
 };
 
 export const getOrders = (req, res) => {
-  res.render("shop/orders", { theme: "light" });
+  res.render("shop/orders", {
+    isAuthenticated: req.session.isLoggedIn,
+    theme: "light",
+  });
 };
 
 export const postAddToCart = async (req, res) => {
-  const productId = req.body.productId;
+  const productId = parseInt(req.body.productId, 10);
+
+  console.log("productId", productId, typeof productId);
 
   const product = await Product.findById(productId);
 
@@ -54,7 +67,7 @@ export const postAddToCart = async (req, res) => {
 };
 
 export const postRemoveFromCart = async (req, res) => {
-  const productId = req.body.productId;
+  const productId = parseInt(req.body.productId, 10);
   const product = await Product.findById(productId);
 
   Cart.removeProduct(productId, product.price, () => {
@@ -63,7 +76,7 @@ export const postRemoveFromCart = async (req, res) => {
 };
 
 export const postChangeQuantity = async (req, res) => {
-  const productId = req.body.productId;
+  const productId = parseInt(req.body.productId, 10);
   const action = req.body.action;
 
   const product = await Product.findById(productId);
@@ -74,5 +87,8 @@ export const postChangeQuantity = async (req, res) => {
 };
 
 export const getCheckout = (req, res) => {
-  res.render("shop/checkout", { theme: "light" });
+  res.render("shop/checkout", {
+    isAuthenticated: req.session.isLoggedIn,
+    theme: "light",
+  });
 };

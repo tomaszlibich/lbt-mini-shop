@@ -2,7 +2,7 @@
   <%- include('../partials/head', { pageTitle: 'Products List Page' }) %>
 
   <body data-bs-theme="<%= theme %>">
-    <%- include('../partials/navigation') %>
+    <%- include('../partials/navigation', { isAuthenticated }) %>
 
     <main>
       <h1>Product list Page</h1>

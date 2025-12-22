@@ -6,7 +6,12 @@
         <li><a class="navbar-brand" href="/shop">Shop</a></li>
         <li><a class="navbar-brand" href="/cart">Cart</a></li>
         <li><a class="navbar-brand" href="/orders">Orders</a></li>
+        <% if (isAuthenticated) { %>
         <li><a class="navbar-brand" href="/admin">Admin</a></li>
+        <li><a class="navbar-brand" href="/logout">Logout</a></li>
+        <% } else { %>
+        <li><a class="navbar-brand" href="/login">Login</a></li>
+        <% } %>
       </ul>
     </div>
   </nav>

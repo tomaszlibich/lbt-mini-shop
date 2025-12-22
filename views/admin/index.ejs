@@ -2,7 +2,7 @@
   <%- include('../partials/head', { pageTitle: 'Admin Page' }) %>
 
   <body data-bs-theme="<%= theme %>">
-    <%- include('../partials/navigation') %>
+    <%- include('../partials/navigation', { isAuthenticated }) %>
 
     <main>
       <h1>Admin Panel</h1>

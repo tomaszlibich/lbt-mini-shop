@@ -1,0 +1,31 @@
+<html lang="en">
+  <%- include('../partials/head', { pageTitle: 'Login Page' }) %>
+
+  <body data-bs-theme="<%= theme %>">
+    <%- include('../partials/navigation', { isAuthenticated }) %>
+
+    <main>
+      <h1>Login Page</h1>
+      <form action="/login" method="POST" autocomplete="off">
+        <input
+          type="email"
+          name="username"
+          id="username"
+          placeholder="Username/Email"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+          required
+        />
+        <% if (errorMessage) { %>
+        <p style="color: red"><%= errorMessage %></p>
+        <% } %>
+        <button type="submit">Log in</button>
+      </form>
+    </main>
+  </body>
+</html>

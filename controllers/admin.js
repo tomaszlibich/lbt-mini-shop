@@ -5,6 +5,7 @@ export const getAdmin = async (req, res) => {
 
   res.render("admin/index", {
     hasProducts: !!products?.length > 0,
+    isAuthenticated: req.session.isLoggedIn,
     products,
     theme: "dark",
   });
@@ -16,9 +17,17 @@ export const getAdminAddEditProduct = async (req, res) => {
   if (productId) {
     const product = await Product.findById(productId);
 
-    res.render("admin/add-edit-product", { product, theme: "dark" });
+    res.render("admin/add-edit-product", {
+      isAuthenticated: req.session.isLoggedIn,
+      product,
+      theme: "dark",
+    });
   } else {
-    res.render("admin/add-edit-product", { product: null, theme: "dark" });
+    res.render("admin/add-edit-product", {
+      isAuthenticated: req.session.isLoggedIn,
+      product: null,
+      theme: "dark",
+    });
   }
 };
 
@@ -47,6 +56,7 @@ export const postAdminEditProduct = async (req, res) => {
 
   res.render("admin/index", {
     hasProducts: !!newProducts?.length > 0,
+    isAuthenticated: req.session.isLoggedIn,
     products: newProducts,
     theme: "dark",
   });
